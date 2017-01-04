@@ -24,15 +24,7 @@
 	      	if (xhr.status === 200) {
 	        	myJSON = JSON.parse(xhr.responseText);
 
-				var parserOptions = {
-					edges: {
-				    	inheritColors: false
-				  	},
-					nodes: {
-				    	fixed: true,
-				    	parseColor: false
-					}
-				};
+				var parserOptions = {};
 
 				var parsed = vis.network.gephiParser.parseGephi(myJSON, parserOptions);
 
@@ -42,9 +34,7 @@
 				  edges: parsed.edges
 				};
 			    // initialize your network!
-			    var network = new vis.Network(container, data, {
-			    	fixed: fixed,
-      				parseColor: parseColor});
+			    var network = new vis.Network(container, data, {});
 
 	     	}
 	    	else {
