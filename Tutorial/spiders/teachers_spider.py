@@ -8,7 +8,6 @@ class QuotesSpider(scrapy.Spider):
 		yield scrapy.Request(url=start_url, callback=self.parse)
 
 	def parse(self, response):
-		filename = 'teachers.html'
 		if (response.meta['depth'] < 2):
 			myID = response.meta['myID'] if 'myID' in response.meta else "Joseph-Louis Lagrange"
 			for pairsel in response.xpath('//tr'):
