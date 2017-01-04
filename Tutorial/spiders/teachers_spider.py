@@ -11,41 +11,38 @@ class QuotesSpider(scrapy.Spider):
 		filename = 'teachers.html'
 		if (response.meta['depth'] < 2):
 			myID = response.meta['myID'] if 'myID' in response.meta else "Joseph-Louis Lagrange"
-			with open(filename, 'a') as f:
-				for pairsel in response.xpath('//tr'):
-					field = pairsel.xpath('th').extract_first()
-					if field is not None:
-						if "student" in field:
-							names = pairsel.xpath('td/a/text()').extract()
-							if names is not None:
-								for name in range(len(names)):
-									yield {
-										"myID": names[name],
-										"relative": myID,
-										"relationship":"student"
-									}
-									f.write(names[name] + " was the student of " + myID + "</br>")
+			for pairsel in response.xpath('//tr'):
+				field = pairsel.xpath('th').extract_first()
+				if field is not None:
+					if "student" in field:
+						names = pairsel.xpath('td/a/text()').extract()
+						if names is not None:
+							for name in range(len(names)):
+								yield {
+									"myID": names[name],
+									"relative": myID,
+									"relationship":"student"
+								}
 
-									next_page = pairsel.css('td a::attr(href)').extract()[name]
-									if next_page is not None:
-										next_page = response.urljoin(next_page)
-										newmeta = response.meta
-										newmeta['myID'] = names[name]
-										yield scrapy.Request(next_page, callback=self.parse, meta=newmeta)
-						elif "advisor" in field:
-							names = pairsel.xpath('td/a/text()').extract()
-							if names is not None:
-								for name in range(len(names)):
-									yield {
-										"myID": names[name],
-										"relative": myID,
-										"relationship":"advisor"
-									}
-									f.write(names[name] + " was the advisor of " + myID + "</br>")
+								next_page = pairsel.css('td a::attr(href)').extract()[name]
+								if next_page is not None:
+									next_page = response.urljoin(next_page)
+									newmeta = response.meta
+									newmeta['myID'] = names[name]
+									yield scrapy.Request(next_page, callback=self.parse, meta=newmeta)
+					elif "advisor" in field:
+						names = pairsel.xpath('td/a/text()').extract()
+						if names is not None:
+							for name in range(len(names)):
+								yield {
+									"myID": names[name],
+									"relative": myID,
+									"relationship":"advisor"
+								}
 
-									next_page = pairsel.css('td a::attr(href)').extract()[name]
-									if next_page is not None:
-										next_page = response.urljoin(next_page)
-										newmeta = response.meta
-										newmeta['myID'] = names[name]
-										yield scrapy.Request(next_page, callback=self.parse, meta=newmeta)
+								next_page = pairsel.css('td a::attr(href)').extract()[name]
+								if next_page is not None:
+									next_page = response.urljoin(next_page)
+									newmeta = response.meta
+									newmeta['myID'] = names[name]
+									yield scrapy.Request(next_page, callback=self.parse, meta=newmeta)
