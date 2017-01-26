@@ -7,13 +7,13 @@ I have immense respect for teachers, professors, and educators everywhere (inclu
 ## Examples
 Here's the result when I bound the recursion depth to 6 (and starting at Joseph-Louis Lagrange). You can see it's already a pretty large graph! I'll do higher values later (I don't anticipate allowing the user to generate this live for processing time reasons).
 
-[Zoomed out photo](ZoomedOut.PNG)
+![Zoomed out photo](ZoomedOut.PNG)
 
 ---
 
 Here's the cleanest part of the above graph, zoomed in. I encourage you to play around with the full thing.
 
-[Zoomed in photo](ZoomedIn.PNG)
+![Zoomed in photo](ZoomedIn.PNG)
 
 ## Current state
 The project currently takes in a name of a person and their Wikipedia page and recursively follows links to their teachers (could be doctoral advisors or academic influences) and their students (both of which are usually provided in the summary table on the right of their page, if it exists. I was amazed to see how quickly one could get to Euler and other big names.
