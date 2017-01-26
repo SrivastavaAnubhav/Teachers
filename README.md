@@ -1,5 +1,5 @@
 # Web-Scraper
-A scrapy spider that crawls wikipedia to find relationships between people and their doctoral students/advisors.
+A scrapy spider that crawls wikipedia to find relationships between people and their doctoral students/advisors. You can find the visualized result [here](https://srivastavaanubhav.github.io/Web-Scraper/).
 
 <h2>Motivation</h2>
 I have immense respect for teachers, professors, and educators everywhere (including parents). I am where I am today thanks to them. There are good and bad teachers, but that difference is hard to quantify, so I decided to instead mark how influential teachers are.
