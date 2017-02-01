@@ -8,7 +8,7 @@ class QuotesSpider(scrapy.Spider):
 		yield scrapy.Request(url=start_url, callback=self.parse)
 
 	def parse(self, response):
-		if (response.meta['depth'] < 5):
+		if (response.meta['depth'] < 7):
 			myID = response.meta['myID'] if 'myID' in response.meta else "Joseph-Louis Lagrange"
 			for pairsel in response.xpath('//tr'):
 				field = pairsel.xpath('th').extract_first()
