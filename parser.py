@@ -33,19 +33,12 @@ for pair in data:
 	else:
 		graph[fromnode] = set([tonode])
 
-vals = {"nodes": [], "edges": []}
-for name in labels:
-	nodeval = {}
-	nodeval["id"] = labels[name]
-	nodeval["label"] = name
-	vals["nodes"].append(nodeval)
-
-for start in graph:
-	for end in graph[start]:
-		edgeval = {}
-		edgeval["source"] = start
-		edgeval["target"] = end
-		vals["edges"].append(edgeval)
-
 with open('myGraph.json', 'w') as f:
-    json.dump(vals, f)
+	serializedEdges = {}
+	for start in graph:
+		serializedEdges[start] = list(graph[start])
+
+	g = {}
+	g["nodes"] = labels
+	g["edges"] = serializedEdges
+	json.dump(g, f)

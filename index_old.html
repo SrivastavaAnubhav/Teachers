@@ -1,0 +1,151 @@
+<html>
+	<head>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.17.0/vis.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.17.0/vis.min.css" rel="stylesheet" type="text/css" />
+		<link rel="stylesheet" type="text/css" href="style.css" />
+	</head>
+	<body>
+		<div id="container">
+			<div id="refholder"></div>
+			<div id="mynetwork"></div>
+		</div>
+		<iframe id="iframe" src="https://en.wikipedia.org/wiki/Joseph-Louis_Lagrange" sandbox="allow-same-origin allow-scripts">
+			<p>Your browser does not support iframes.</p>
+		</iframe>
+
+		<script type="text/javascript">
+			var container = document.getElementById('mynetwork');
+			var xhr = new XMLHttpRequest();
+			xhr.onreadystatechange = function () {
+				if (xhr.readyState === 4) {
+				  	if (xhr.status === 200) {
+						myJSON = JSON.parse(xhr.responseText);
+
+						var parserOptions = {};
+
+						var parsed = vis.network.gephiParser.parseGephi(myJSON, parserOptions);
+
+						// provide data in the normal fashion
+						var data = {
+							nodes: parsed.nodes,
+							edges: parsed.edges
+						};
+						// initialize your network!
+						var buildparams = {
+							layout: {
+								hierarchical: {
+									levelSeparation: 150,
+									nodeSpacing: 100,
+									treeSpacing: 10,
+									blockShifting: true,
+									edgeMinimization: true,
+									parentCentralization: true,
+									sortMethod: 'directed'
+								},
+							},
+
+							nodes: {
+								font: {
+									color: '#FFFFFF',
+								},
+							},
+							/*
+							PROPERTY NAME						DEFAULT
+							------------------------------------------------------
+
+							hierarchical.levelSeparation		150
+							The distance between the different levels.
+							
+							hierarchical.nodeSpacing			100
+							Minimum distance between nodes on the free axis. This is only for the initial layout. If you enable physics, the node distance there will be the effective node distance.
+							
+							hierarchical.treeSpacing			200
+							Distance between different trees (independent networks). This is only for the initial layout. If you enable physics, the repulsion model will denote the distance between the trees.
+							
+							hierarchical.blockShifting			true
+							Method for reducing whitespace. Can be used alone or together with edge minimization. Each node will check for whitespace and will shift it's branch along with it for as far as it can, respecting the nodeSpacing on any level. This is mainly for the initial layout. If you enable physics, they layout will be determined by the physics. This will greatly speed up the stabilization time though!
+
+							hierarchical.edgeMinimization		true
+							Method for reducing whitespace. Can be used alone or together with block shifting. Enabling block shifting will usually speed up the layout process. Each node will try to move along its free axis to reduce the total length of it's edges. This is mainly for the initial layout. If you enable physics, they layout will be determined by the physics. This will greatly speed up the stabilization time though!
+							
+							hierarchical.parentCentralization	true
+							When true, the parents nodes will be centered again after the the layout algorithm has been finished.
+							*/
+
+							edges: {
+								arrows: 'to',
+							},
+
+							physics: {
+								enabled: false,
+								solver: 'repulsion',
+		//						barnesHut: {
+		//							avoidOverlap: 1,
+		//						},
+							},
+						};
+						var network = new vis.Network(container, data, buildparams);
+
+						/*
+						function createCORSRequest(method, url) {
+							var xhr = new XMLHttpRequest();
+							if ("withCredentials" in xhr) {
+								// XHR for Chrome/Firefox/Opera/Safari.
+								xhr.open(method, url, true);
+							} else if (typeof XDomainRequest != "undefined") {
+								// XDomainRequest for IE.
+								xhr = new XDomainRequest();
+								xhr.open(method, url);
+							} else {
+								// CORS not supported.
+								xhr = null;
+							}
+							return xhr;
+						}
+
+						// Helper method to parse the title tag from the response.
+						function getTitle(text) {
+							return text.match('<title>(.*)?</title>')[1];
+						}
+
+						// Make the actual CORS request.
+						function makeCorsRequest() {
+							// This is a sample server that supports CORS.
+							var url = 'http://html5rocks-cors.s3-website-us-east-1.amazonaws.com/index.html';
+
+							var xhr = createCORSRequest('GET', url);
+							if (!xhr) {
+								alert('CORS not supported');
+								return;
+							}
+
+							// Response handlers.
+							xhr.onload = function() {
+								var text = xhr.responseText;
+								var title = getTitle(text);
+								alert('Response from CORS request to ' + url + ': ' + title);
+							};
+
+							xhr.onerror = function() {
+								alert('Woops, there was an error making the request.');
+							};
+
+							xhr.send();
+						}
+
+						network.on("selectNode", function (params) {
+							makeCorsRequest();
+						});
+						*/
+				 	}
+					else {
+						alert("xhr failed");
+					}
+				}
+			}
+			xhr.open('GET', 'myGraph.json', true);
+			xhr.send();
+		</script>
+	</body>
+</html>

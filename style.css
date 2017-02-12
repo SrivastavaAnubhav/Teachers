@@ -1,6 +1,22 @@
-#mynetwork {
-			width: 99%;
-			height: 98.7%;
-            margin: auto;
-			border: 5px solid darkgrey;
+body {
+	font: 16px Helvetica;
+}
+
+svg {
+	display: block;
+	margin: auto;
+	width: 98%;
+	height: 96%;
+	border: solid grey 2px;
+}
+
+.node rect {
+	stroke: #333;
+	fill: #fff;
+}
+
+.edgePath path {
+	stroke: #333;
+	fill: #333;
+	stroke-width: 1.5px;
 }

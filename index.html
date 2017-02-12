@@ -1,53 +1,83 @@
 <html>
 <head>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.17.0/vis.min.js"></script>
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.17.0/vis.min.css" rel="stylesheet" type="text/css" />
-	<link rel="stylesheet" type="text/css" href="style.css" />
+	<title>Web scraper</title>
+
+	<script src="d3.v3.min.js" charset="utf-8"></script>
+	<script src="dagre-d3.js"></script>
+	<link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div id="mynetwork"></div>
 
-<script type="text/javascript">
-	// create an array with nodes
+	<svg>
+		<g/>
+	</svg>
 
-	var container = document.getElementById('mynetwork');
+	<script type="text/javascript">
+	// A lot of the code that follows comes from the dagre-d3 TCP
+	// example on their wiki. Please check it out!
+
+	var g = new dagreD3.graphlib.Graph().setGraph({});
 	var xhr = new XMLHttpRequest();
 	xhr.onreadystatechange = function () {
 		if (xhr.readyState === 4) {
-		  	if (xhr.status === 200) {
-				myJSON = JSON.parse(xhr.responseText);
-
-				var parserOptions = {};
-
-				var parsed = vis.network.gephiParser.parseGephi(myJSON, parserOptions);
-
-				// provide data in the normal fashion
-				var data = {
-				  nodes: parsed.nodes,
-				  edges: parsed.edges
-				};
-				// initialize your network!
-				var buildparams = {
-					layout: {
-						hierarchical: {
-							enabled:true,
-							nodeSpacing: 120,
-						}
-					},
-					physics: {
-						enabled: false
-					}
-				};
-				var network = new vis.Network(container, data, buildparams);
-
-		 	}
+			if (xhr.status === 200) {
+				processJSON(xhr.responseText);
+			}
 			else {
 				alert("xhr failed");
 			}
 		}
+	}	
+
+	function processJSON(data) {
+		var myJSON = JSON.parse(data);
+		var nodes = myJSON["nodes"];
+		var edges = myJSON["edges"];
+		
+		for (var name in nodes) {
+			g.setNode(nodes[name], {label:name});
+		}
+
+		// Rounds the corners of each node
+		g.nodes().forEach(function(v) {
+			var node = g.node(v);
+			node.rx = node.ry = 5;
+		});
+
+		debugger;
+		for (var source in edges) {
+			for (var i = 0; i < edges[source].length; i++) {
+				g.setEdge(edges[source][i], source, {label: ""});
+			}
+		}
+
+		var svg = d3.select("svg"),
+		inner = svg.select("g");
+
+		// Set up zoom support
+		var zoom = d3.behavior.zoom().on("zoom", function() {
+			inner.attr("transform", "translate(" + d3.event.translate + ")" +
+				"scale(" + d3.event.scale + ")");
+		});
+		svg.call(zoom);
+
+		// Create the renderer
+		var render = new dagreD3.render();
+
+		// Run the renderer. This is what draws the final graph.
+		render(inner, g);
+
+		// Center the graph
+		var initialScale = 0.75;
+		zoom
+		.translate([(svg.attr("width") - g.graph().width * initialScale) / 2, 20])
+		.scale(initialScale)
+		.event(svg);
+		//svg.attr('height', g.graph().height * initialScale + 40);
 	}
+
 	xhr.open('GET', 'myGraph.json', true);
 	xhr.send();
+
 </script>
-</body>
-</html>
+</body></html>
