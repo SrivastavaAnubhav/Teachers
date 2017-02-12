@@ -2,12 +2,23 @@ body {
 	font: 16px Helvetica;
 }
 
-svg {
+#container {
 	display: block;
 	margin: auto;
 	width: 98%;
 	height: 96%;
 	border: solid grey 2px;
+}
+
+#size {
+	position: fixed;
+	font-size: 1.3rem;
+	top: 2%;
+	right: 3%;
+}
+
+#sizeselect {
+	font-size: 1.3rem;
 }
 
 .node rect {
